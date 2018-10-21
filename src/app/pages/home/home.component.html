@@ -3,20 +3,25 @@
         <h1>Chat App</h1>
         Total users: {{ totalUsers }}
     </div>
-    <hr>
-    <br />
     <div style="display: flex; flex-direction: column;">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div class="form-group">
                     <label for="inputMessage"><b>Message</b></label>
                     <input [(ngModel)]="message" type="text" class="form-control" id="inputMessage" aria-describedby="Message to send" 
                         placeholder="Enter your message">
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <div style="margin-top: 30px;">
-                    <a (click)="sendMessage($event)" class="btn btn-primary btn-block">
+                    <div class="form-group">
+                        <input class="form-control" type="text" maxlength="10" [(ngModel)]="userName" autofocus placeholder="Say your name..." />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div style="margin-top: 30px;">
+                    <a (click)="sendMessage($event)" class="btn btn-primary btn-block {{ (userName.length && message.length)? '' : 'disabled' }}" aria-disabled="true">
                         <span style="color: #fff;">
                             Send!
                         </span>
@@ -25,24 +30,29 @@
             </div>
         </div>
     </div>
-    <div *ngIf="!message.length">
+    <div *ngIf="!userName.length || !message.length">
         <p>This is not a valid message!</p>
+    </div>
+    <div *ngIf="userName.length && message.length">
+        <p>Looking nice...</p>
     </div>
     <div class="card">
         <div class="card-header">
             Messages
         </div>
-        <ul class="list-group list-group-flush scrollable">
-            <li *ngFor="let e of messagesQueue; let i = index; let first = first;" [id]="e.id" class="list-group-item">
-                <div>
-                    <p>
-                        <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }}</span>
-                    </p>
-                    <p>
-                        {{ e.text }}
-                    </p>
-                </div>
-            </li>
+        <ul class="list-group list-group-flush">
+            <div class="scrollable">
+                <li *ngFor="let e of messagesQueue; let i = index; let first = first;" [id]="e.id" class="list-group-item">
+                    <div>
+                        <p>
+                            <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }} <b>Date: </b> {{ e.date }}</span>
+                        </p>
+                        <p>
+                            {{ e.text }}
+                        </p>
+                    </div>
+                </li>
+            </div>
         </ul>
     </div>
 </div>
