@@ -33,7 +33,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.totalUsers = res;
         });
         this.messagesSubscription = this._signalrService.messagesObservable$.subscribe((res) => {
-            console.log("Event cpatured");
+            //console.log("Event cpatured");
             this.messagesQueue.unshift(res);
         });
     }
@@ -43,7 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (this.isValidMessage) {
             // send the message....
             let msg = new MessageModel(this.message, 'Daniel');
-            this._serviceMsg.saveMessage(msg).subscribe(data => {
+            this._serviceMsg.saveMessage(msg).then(data => {
                 // this.messagesQueue.unshift(data);
                 this._signalrService.anotherMessage(data);
             });
@@ -58,10 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }else {
             this.isValidMessage = true;
         }
-    }
-
-    changeTotalMessages(nums: number) {
-        this.totalMessages = nums;
     }
     
     ngOnDestroy(): void {

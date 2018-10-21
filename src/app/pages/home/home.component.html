@@ -12,7 +12,6 @@
                     <label for="inputMessage"><b>Message</b></label>
                     <input [(ngModel)]="message" type="text" class="form-control" id="inputMessage" aria-describedby="Message to send" 
                         placeholder="Enter your message">
-                    <small id="msgHelp" class="form-text text-muted">These messages are deleted when you refresh the page!</small>
                 </div>
             </div>
             <div class="col-md-4">
@@ -26,21 +25,23 @@
             </div>
         </div>
     </div>
-    <div *ngIf="message.lenght">
+    <div *ngIf="!message.length">
         <p>This is not a valid message!</p>
     </div>
     <div class="card">
         <div class="card-header">
             Messages
         </div>
-        <ul class="list-group list-group-flush">
-            <li *ngFor="let e of messagesQueue; let i = index" [id]="e.id" class="list-group-item">
-                <p>
-                    <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }}</span>
-                </p>
-                <p>
-                    {{ e.text }}
-                </p>
+        <ul class="list-group list-group-flush scrollable">
+            <li *ngFor="let e of messagesQueue; let i = index; let first = first;" [id]="e.id" class="list-group-item">
+                <div>
+                    <p>
+                        <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }}</span>
+                    </p>
+                    <p>
+                        {{ e.text }}
+                    </p>
+                </div>
             </li>
         </ul>
     </div>

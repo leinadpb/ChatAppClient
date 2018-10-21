@@ -1,17 +1,19 @@
 import { Injectable, Input } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@aspnet/signalr';
-import { Subject }    from 'rxjs';
+import { Subject, Observable }    from 'rxjs';
 
 @Injectable()
 export class SignalrService {
 
     private notify = new Subject<any>();
     private messages = new Subject<any>();
+    private ids = new Subject<any>();
     /**
-     * Observable string streams
+     * Observables
     */
     notifyObservable$ = this.notify.asObservable();
     messagesObservable$ = this.messages.asObservable();
+    idsObservable$ = this.ids.asObservable();
 
     private ENDPOINT = "http://localhost:5000/chat";
     private _hubConnection: HubConnection;
@@ -30,6 +32,12 @@ export class SignalrService {
       }
     }
 
+    onGetId(data: any) {
+      if (data) {
+        this.ids.next(data);
+      }
+    }
+
     startPipeline(): void {
         this.createConnection();
         this.registerOnServerEvents();
@@ -37,14 +45,18 @@ export class SignalrService {
     }
 
     private startConnection(): void {
-        this._hubConnection
-          .start().then(data => {
-            console.log('Hub connection started!!!!!!!!');
-            this.usersCount = 1;
-        }).catch(error => {
-          console.log(`ChatApp: Error on connecting to hub: ${error}`);
-        })
-      }
+      this._hubConnection
+        .start().then(data => {
+          console.log('Hub connection started!!!!!!!!');
+          this.usersCount = 1;
+      }).catch(error => {
+        console.log(`ChatApp: Error on connecting to hub: ${error}`);
+      })
+    }
+
+    public async getConnectionId() {
+      return await this._hubConnection.invoke('GetCurrentConnectionId');
+    }
     
       private createConnection(): void {
         this._hubConnection = new HubConnectionBuilder()
@@ -54,14 +66,17 @@ export class SignalrService {
     
       private registerOnServerEvents(): void {
         this._hubConnection.on('changeTotalMessages', (data: number) => {
-          console.log(`Connected users: ${data}`);
+          //console.log(`Connected users: ${data}`);
           this.usersCount = data;
           this.notifyOther(data);
         });
         this._hubConnection.on('ReceiveMessage', (data: any) => {
           //console.log(`Recaived messaged: ${data.authorName} : ${data.text}`);
-          console.log(data);
+          //console.log(data);
           this.anotherMessage(data);
+        });
+        this._hubConnection.on('getConnectionId', () => {
+
         });
       }
 }

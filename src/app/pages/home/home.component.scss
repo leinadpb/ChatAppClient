@@ -12,4 +12,9 @@
     margin-bottom: 30px;
     padding-left: 15px;
     padding-right: 15px;
+
+    .scrollable {
+        height:250px;
+        overflow-y: scroll;
+    }
 }
