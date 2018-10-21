@@ -1,0 +1,3 @@
+<li class="nav-item {{isActive? 'active' : ''}}">
+    <a class="nav-link" (click)="onClick($event)">{{text}} <span *ngIf="isActive" class="sr-only">(current)</span></a>
+</li>

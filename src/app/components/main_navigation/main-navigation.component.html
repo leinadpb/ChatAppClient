@@ -1,0 +1,17 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" routerLink="/home">{{ title }}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <pb-menu-item *ngFor="let e of items"
+                [id]="e.id"
+                [link]="e.link"
+                [text]="e.text"
+                [isActive]="e.isActive"
+                (clicked)="itemClicked($event)">
+            </pb-menu-item>
+        </ul>
+    </div>
+</nav>

@@ -1,0 +1,47 @@
+<div>
+    <div class="main-title">
+        <h1>Chat App</h1>
+        Total users: {{ totalUsers }}
+    </div>
+    <hr>
+    <br />
+    <div style="display: flex; flex-direction: column;">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="inputMessage"><b>Message</b></label>
+                    <input [(ngModel)]="message" type="text" class="form-control" id="inputMessage" aria-describedby="Message to send" 
+                        placeholder="Enter your message">
+                    <small id="msgHelp" class="form-text text-muted">These messages are deleted when you refresh the page!</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="margin-top: 30px;">
+                    <a (click)="sendMessage($event)" class="btn btn-primary btn-block">
+                        <span style="color: #fff;">
+                            Send!
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="message.lenght">
+        <p>This is not a valid message!</p>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            Messages
+        </div>
+        <ul class="list-group list-group-flush">
+            <li *ngFor="let e of messagesQueue; let i = index" [id]="e.id" class="list-group-item">
+                <p>
+                    <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }}</span>
+                </p>
+                <p>
+                    {{ e.text }}
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
