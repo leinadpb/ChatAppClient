@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this._signalrService.getConnectionId().then(id => {
                 this._serviceMsg.saveMessage(msg, id).subscribe(data => {
                     // this.messagesQueue.unshift(data);
+                    console.log(data);
                     this._signalrService.anotherMessage(data);
                     console.log('all clients should be notified!');
                 });

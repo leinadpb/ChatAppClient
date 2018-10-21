@@ -45,7 +45,7 @@
                 <li *ngFor="let e of messagesQueue; let i = index; let first = first;" [id]="e.id" class="list-group-item">
                     <div>
                         <p>
-                            <span><b>Author: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }} <b>Date: </b> {{ e.date }}</span>
+                            <span><b>By: </b>{{ e.authorName }} <b>Likes: </b>{{ e.likes }} <b>Date: </b> {{ e.sentDate | date: ('short') }}</span>
                         </p>
                         <p>
                             {{ e.text }}
