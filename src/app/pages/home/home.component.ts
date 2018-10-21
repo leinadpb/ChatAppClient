@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         this.messagesSubscription = this._signalrService.messagesObservable$.subscribe((res) => {
             //console.log("Event cpatured");
-            this.messagesQueue.unshift(res);
+            //this.messagesQueue.unshift(res);
         });
     }
 
@@ -43,10 +43,13 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (this.isValidMessage) {
             // send the message....
             let msg = new MessageModel(this.message, 'Daniel');
-            this._serviceMsg.saveMessage(msg).then(data => {
-                // this.messagesQueue.unshift(data);
-                this._signalrService.anotherMessage(data);
-            });
+            this._signalrService.getConnectionId().then(id => {
+                this._serviceMsg.saveMessage(msg, id).subscribe(data => {
+                    // this.messagesQueue.unshift(data);
+                    this._signalrService.anotherMessage(data);
+                });
+            }).catch(err => console.log(err));
+            
             // Erease current message
             this.message = '';
         }

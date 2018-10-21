@@ -54,8 +54,8 @@ export class SignalrService {
       })
     }
 
-    public async getConnectionId() {
-      return await this._hubConnection.invoke('GetCurrentConnectionId');
+    public getConnectionId() {
+      return this._hubConnection.invoke('GetCurrentConnectionId');
     }
     
       private createConnection(): void {
