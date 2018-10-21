@@ -11,11 +11,12 @@ import { Subscription } from 'rxjs';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-    @Input() message: string = 'Sample message...';
-    private isValidMessage: boolean = true;
+    @Input() message: string = '';
+    private isValidMessage: boolean = false;
     @Input() messagesQueue: Array<MessageModel> = [];
     @Input() totalMessages: number;
     private totalUsers: number;
+    @Input() userName: string = '';
 
     private subscription: Subscription;
     private messagesSubscription: Subscription;
@@ -42,10 +43,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.validateMessage();
         if (this.isValidMessage) {
             // send the message....
-            let msg = new MessageModel(this.message, 'Daniel');
+            let msg = new MessageModel(this.message, this.userName);
             this._signalrService.getConnectionId().then(id => {
                 this._serviceMsg.saveMessage(msg, id).subscribe(data => {
                     // this.messagesQueue.unshift(data);
+                    console.log(data);
                     this._signalrService.anotherMessage(data);
                     console.log('all clients should be notified!');
                 });
@@ -57,7 +59,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     private validateMessage() {
-        if (this.message.length === 0) {
+        if (this.message.length === 0 || this.userName.length === 0) {
             this.isValidMessage = false;
         }else {
             this.isValidMessage = true;
