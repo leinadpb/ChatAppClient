@@ -29,6 +29,7 @@ export class SignalrService {
     anotherMessage(data: any) {
       if (data) {
         this.messages.next(data);
+        console.log('Event dispatched to stream...');
       }
     }
 
@@ -54,8 +55,8 @@ export class SignalrService {
       })
     }
 
-    public async getConnectionId() {
-      return await this._hubConnection.invoke('GetCurrentConnectionId');
+    public getConnectionId() {
+      return this._hubConnection.invoke('GetCurrentConnectionId');
     }
     
       private createConnection(): void {

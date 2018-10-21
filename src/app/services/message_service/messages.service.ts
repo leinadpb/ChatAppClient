@@ -11,7 +11,7 @@ export class MessagesService {
     private url: string = 'https://localhost:5001/api/messages';
     private ENDPOINT = "http://127.0.0.1:5000/api/messages";
 
-    constructor(private http: HttpClient, private signalR: SignalrService) { }
+    constructor(private http: HttpClient) { }
 
     private commonHeaders: {
         "Content-Type": "application/json",
@@ -25,13 +25,14 @@ export class MessagesService {
     }
 
 
-    saveMessage(msg: MessageModel): Promise<any> {
-        let canContinue: boolean = false;
-        let id = '';
-        return this.signalR.getConnectionId().then(data => {
-            return this.http.post<MessageModel>(this.ENDPOINT + `?connId=${data}`, msg, {
-                headers: this.commonHeaders
-            });
-        }).catch(err => console.log(err));
+    saveMessage(msg: MessageModel, id: string): Observable<any> {
+        console.log(`ID received on messages services: ${id}`);
+        let params = {
+            "connId": id
+        }
+        return this.http.post<MessageModel>(this.ENDPOINT, msg, {
+            headers: this.commonHeaders,
+            params: params
+        });
     }
 }
