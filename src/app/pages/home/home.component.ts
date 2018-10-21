@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
         this.messagesSubscription = this._signalrService.messagesObservable$.subscribe((res) => {
             //console.log("Event cpatured");
-            //this.messagesQueue.unshift(res);
+            this.messagesQueue.unshift(res);
         });
     }
 
@@ -47,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this._serviceMsg.saveMessage(msg, id).subscribe(data => {
                     // this.messagesQueue.unshift(data);
                     this._signalrService.anotherMessage(data);
+                    console.log('all clients should be notified!');
                 });
             }).catch(err => console.log(err));
             

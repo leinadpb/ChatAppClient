@@ -29,6 +29,7 @@ export class SignalrService {
     anotherMessage(data: any) {
       if (data) {
         this.messages.next(data);
+        console.log('Event dispatched to stream...');
       }
     }
 
