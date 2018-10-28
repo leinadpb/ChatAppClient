@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-    declarations: [],
-    exports: [],
+    declarations: [
+    ],
+    exports: [
+    ],
     imports: [
         HttpClientModule
     ],

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MenuItem } from '../../shared/models/MenuItem';
 import { ClickMenuItemEvent } from '../../shared/models/ClickMenuItemEvent';
 import { Router } from "@angular/router";
-
+import { AuthService } from "../../services/auth_service/AuthService";
 @Component({
     selector: 'pb-main-navigation',
     templateUrl: './main-navigation.component.html',
@@ -11,11 +11,13 @@ import { Router } from "@angular/router";
 export class MainNavigationComponent {
     @Input() title: string;
     @Input() items: Array<MenuItem>;
+    private isAuthenticated: boolean = false;
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private authService: AuthService) {
         if (!!this.items) {
             this.items = [];
         }
+        this.isAuthenticated = authService.getIsAuthenticated();
     }
 
     private itemClicked(event: ClickMenuItemEvent): void {
