@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MenuItem } from '../../shared/models/MenuItem';
 import { ClickMenuItemEvent } from '../../shared/models/ClickMenuItemEvent';
 import { Router } from "@angular/router";
@@ -11,13 +11,12 @@ import { AuthService } from "../../services/auth_service/AuthService";
 export class MainNavigationComponent {
     @Input() title: string;
     @Input() items: Array<MenuItem>;
-    private isAuthenticated: boolean = false;
+    @Input() isAuthenticated: boolean;
 
     constructor(private router: Router, private authService: AuthService) {
         if (!!this.items) {
             this.items = [];
         }
-        this.isAuthenticated = authService.getIsAuthenticated();
     }
 
     private itemClicked(event: ClickMenuItemEvent): void {
@@ -29,5 +28,10 @@ export class MainNavigationComponent {
             }
         });
         this.router.navigate([event.link]);
+    }
+
+    private logout(): void {
+        this.authService.logout();
+        this.router.navigate(['/auth']);
     }
 }

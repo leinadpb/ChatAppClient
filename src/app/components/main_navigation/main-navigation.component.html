@@ -5,7 +5,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-            <div *ngIf="isAuthenticated">
+            <ng-container *ngIf="isAuthenticated">
                 <pb-menu-item *ngFor="let e of items"
                     [id]="e.id"
                     [link]="e.link"
@@ -13,8 +13,15 @@
                     [isActive]="e.isActive"
                     (clicked)="itemClicked($event)">
                 </pb-menu-item>
-            </div>
-            <div *ngIf="!isAuthenticated">
+                <pb-menu-item
+                    id="10"
+                    link="/logout"
+                    text="Logout"
+                    isActive="false"
+                    (clicked)="logout($event)">
+                </pb-menu-item>
+            </ng-container>
+            <ng-container *ngIf="!isAuthenticated">
                 <pb-menu-item
                     [id]="3"
                     [link]="'/auth'"
@@ -22,7 +29,7 @@
                     [isActive]="false"
                     (clicked)="itemClicked($event)">
                 </pb-menu-item>
-            </div>
+            </ng-container>
         </ul>
     </div>
 </nav>

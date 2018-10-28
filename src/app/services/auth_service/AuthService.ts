@@ -1,65 +1,60 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, of } from 'rxjs';
 
 import { UserApp } from '../../shared/models/UserApp';
 import { TokenDTO } from '../../shared/models/TokenDTO';
 import { UserLoginDTO } from '../../shared/models/UserLoginDTO';
+import { AppUserAuth } from '../../shared/models/AppUserAuth';
 
 @Injectable()
 export class AuthService {
 
-    private ENDPOINT = "http://127.0.0.1:5000/api/account";
+    private ENDPOINT: string = 'http://127.0.0.1:5000/api/account';
+    public TOKEN_COOKIE_KEY = 'bearerToken';
+    public USERNAME_COOKIE_KEY = 'emailCurrentUser'
+    public SECURITY_OBJ_COOKIE_KEY = 'securityObjectCookieKey';
+    securityObject: AppUserAuth = new AppUserAuth();
+    private loginStream = new Subject<any>();
 
-    private commonHeaders: {
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-    }
-
-    public isAuthenticated: boolean = false;
-    public currentUserToken: string;
-    public currentUserEmail: string;
+    //Observables
+    login$ = this.loginStream.asObservable();
 
     constructor(private http: HttpClient) { }
 
-    getIsAuthenticated(): boolean {
-        return this.isAuthenticated;
+    notifySecurityObject(user: AppUserAuth): void {
+        this.loginStream.next(user);
     }
 
-    getUserToken(): string {
-        console.log(`ACTUAL VALUE OF TOKEN IN SERVICE: ${this.currentUserToken}`);
-        return this.currentUserToken;
-    }
-
-    getUserEmail(): string {
-        return this.currentUserEmail;
-    }
-
-    login(user: UserLoginDTO): void {
-        this.http.post(this.ENDPOINT + "/login", user, {
-            headers: this.commonHeaders
-        }).subscribe((data: TokenDTO) => {
-            if (data.token !== null || data.token !== '') {
-                this.currentUserToken = data.token;
-                this.isAuthenticated = true;
-                this.currentUserEmail = data.email;
-                localStorage.setItem('token', data.token);
-                console.log(`Logged in SUCCESSFULLY! User token: ${data.token}`);
+    login(entity: UserApp): void {
+        this.resetSecurityObject(); // Initialize Security Object
+        this.http.post(this.ENDPOINT + '/login', entity, {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
             }
-        }, err => {
-            console.log(`ERROR when loggin in >>>>>>>>>>> ${err}`);
-        });
-    }
-
-    register(user: UserApp): Observable<any> {
-        return this.http.post(this.ENDPOINT + "/register", user, {
-            headers: this.commonHeaders
+        }).subscribe(data => {
+            Object.assign(this.securityObject, data);
+            if (this.securityObject.username !== "") {
+                // Store token into local storage
+                window.localStorage.setItem(this.TOKEN_COOKIE_KEY, this.securityObject.bearerToken);
+                window.localStorage.setItem(this.USERNAME_COOKIE_KEY, this.securityObject.username);
+                window.localStorage.setItem(this.SECURITY_OBJ_COOKIE_KEY, JSON.stringify(this.securityObject));
+                this.notifySecurityObject(this.securityObject);
+                console.log(`User logged in: ${this.securityObject}`);
+            }
         });
     }
 
     logout(): void {
-        this.isAuthenticated = false;
-        this.currentUserToken = undefined;
-        this.currentUserEmail = undefined;
+        this.resetSecurityObject();
+        localStorage.removeItem(this.TOKEN_COOKIE_KEY);
+        localStorage.removeItem(this.SECURITY_OBJ_COOKIE_KEY);
+        localStorage.removeItem(this.USERNAME_COOKIE_KEY);
+        this.loginStream.next(this.securityObject);
+    }
+
+     resetSecurityObject(): void {
+        this.securityObject = new AppUserAuth();
     }
 }
