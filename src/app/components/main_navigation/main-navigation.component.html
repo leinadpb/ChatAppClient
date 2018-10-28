@@ -5,13 +5,24 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-            <pb-menu-item *ngFor="let e of items"
-                [id]="e.id"
-                [link]="e.link"
-                [text]="e.text"
-                [isActive]="e.isActive"
-                (clicked)="itemClicked($event)">
-            </pb-menu-item>
+            <div *ngIf="isAuthenticated">
+                <pb-menu-item *ngFor="let e of items"
+                    [id]="e.id"
+                    [link]="e.link"
+                    [text]="e.text"
+                    [isActive]="e.isActive"
+                    (clicked)="itemClicked($event)">
+                </pb-menu-item>
+            </div>
+            <div *ngIf="!isAuthenticated">
+                <pb-menu-item
+                    [id]="3"
+                    [link]="'/auth'"
+                    [text]="'Login'"
+                    [isActive]="false"
+                    (clicked)="itemClicked($event)">
+                </pb-menu-item>
+            </div>
         </ul>
     </div>
 </nav>
