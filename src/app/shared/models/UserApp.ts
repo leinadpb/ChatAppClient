@@ -1,5 +1,4 @@
 export class UserApp {
-    firstaname: string;
-    lastname: string;
-    token: string;
+    username: string = '';
+    password: string = '';
 }

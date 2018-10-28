@@ -1,4 +1,4 @@
-<div *ngIf="showLogin">
+<div *ngIf="showLogin && !isAuthenticated">
     <h5>Login</h5>
     <div class="form-group">
         <label>Username / email</label>
@@ -12,4 +12,7 @@
 </div>
 <div *ngIf="showRegister">
     Register form...
+</div>
+<div *ngIf="isAuthenticated">
+    Login succesfull!
 </div>
